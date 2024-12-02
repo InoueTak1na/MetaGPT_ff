@@ -18,6 +18,6 @@ class ProjectManager(Role):
         msg = self.get_memories(k=1)[0]
         result = await todo.run(msg.content)
         msg = Message(content=result, role=self.profile, cause_by=type(todo))
-        self.rc.memory.add(msg) 
+        self.rc.memory.add(msg)
     
         return msg
