@@ -2,7 +2,7 @@ import typer
 import asyncio
 from metagpt.logs import logger
 from metagpt.team import Team
-from ffai.roles.programmer import SimpleCoder, RunnableCoder
+from ffai.roles.programmer import SimpleCoder
 from ffai.roles.tester import SimpleTester
 from ffai.roles.reviewer import SimpleReviewer
 

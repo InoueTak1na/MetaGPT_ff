@@ -5,7 +5,7 @@ from metagpt.logs import logger
 
 class SimpleWriteCode(Action):
     PROMPT_TEMPLATE: str = """
-    write a python function that can {instruction} and provide two runnable test cases/
+    write a python function that can {instruction}
     Return ```python your_code_here ``` with NO other texts,
     your code:
     """
@@ -25,12 +25,3 @@ class SimpleWriteCode(Action):
         match = re.search(pattern, rsp, re.DOTALL)
         code_text = match.group(1) if match else rsp
         return code_text
-
-class SimpleRunCode(Action):
-    name: str = "SimpleRunCode"
-
-    async def run(self, code_text: str):
-        result = subprocess.run(["python3", "-c", code_text], capture_output=True, text=True)
-        code_result = result.stdout
-        logger.info(f"{code_result=}")
-        return code_result
