@@ -1,7 +1,8 @@
 from metagpt.actions.action import Action
 from metagpt.tools.web_browser_engine_playwright import PlaywrightWrapper
 from playwright.async_api import async_playwright
-import datetime
+from metagpt.schema import Message
+from typing import ClassVar, List, Dict
 
 
 class FetchTitle(Action):
@@ -12,11 +13,7 @@ class FetchTitle(Action):
     相关
     无关
     """
-    output_file: str = f'WorldNews/data/news_{datetime.datetime.now().strftime("%Y%m%d")}.txt'
-    try:
-        open(output_file, 'w').close()
-    except Exception as e:
-        print(f"Failed to clear the file: {output_file}, error: {e}")
+    results: ClassVar[List[Dict[str, str]]] = list()
 
     async def get_news_content(self, page):
         results = await page.query_selector_all("h3.t a")
@@ -30,9 +27,7 @@ class FetchTitle(Action):
                 
             if "无关" in rsp:
                 continue
-            with open(f'WorldNews/data/news_{datetime.datetime.now().strftime("%Y%m%d")}.txt', 'a') as f:
-                f.write(f"{rsp} | {title} | {content} | {url}\n")
-
+            self.results.append({"title": title, "url": url})
     async def run(self, keyword: str = "国际运营商") -> list:
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=False)
@@ -69,6 +64,12 @@ class FetchTitle(Action):
                     break
 
             await browser.close()
+            msg = Message(content=self.results,
+                          role="Fetcher",
+                          cause_by=type(self),
+                          send_to="DBManager")
+            self.rc.memory.add(msg)
+            return msg
 
 class FetchContent(Action):
     name: str = "FetchContent"
