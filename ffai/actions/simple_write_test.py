@@ -9,10 +9,20 @@ class SimpleWriteTest(Action):
     Write {k} unit tests for the given function. The tests should be directly runnable with python3 -c.
     Return ```python your_code_here ``` with NO other texts.
     Make sure to:
-    1. Import the function to test
+    1. copy the function to test
     2. Write test cases that print results
     3. Include all necessary imports
     4. Make it a complete runnable script
+    5. Comment and print should be in Chinese
+    example:
+    ```python
+    # 函数定义
+    def add(a, b):
+        return a + b
+    # 测试
+    print(add(1, 2) == 3)
+    print(add(2, 2) == 4)
+    ```
     """
 
     name: str = "SimpleWriteTest"

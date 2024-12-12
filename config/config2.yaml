@@ -8,8 +8,14 @@
 #   api_key: "20dfce770d07c086ec566ed264bfa8df.q9kjMZzhJhLU96W1"
 
 llm:
+  api_type: "dashscope"
   base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
   model: "qwen-max"
-  api_key: "sk-3437f4165f7e4c2b96fd8df81db8e929"
+  api_key: "sk-*"
 
-proxy: "http://127.0.0.1:7890"
+embedding:
+  api_type: "ollama"
+  base_url: "http://localhost:11434"
+  model: "shaw/dmeta-embedding-zh"
+  dimensions: 1536
+# proxy: "http://127.0.0.1:7890"

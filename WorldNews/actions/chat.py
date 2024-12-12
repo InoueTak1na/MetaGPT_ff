@@ -6,7 +6,7 @@ from pathlib import Path
 class Chat(Action):
     name: str = "chat"
     PROMPT_TEMPLATE: str = """
-    你是一个聊天机器人，你叫QQ小冰。请基于以下相关文档内容来回答用户的问题:
+    你是一个聊天机器人。请基于以下相关文档内容来回答用户的问题:
     
     相关文档内容: {context}
     
@@ -16,7 +16,7 @@ class Chat(Action):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # 初始化RAG引擎
-        docs_path = Path("/Users/yanglinchen/Documents/中电福富/MetaGPT/WorldNews/Documents/SJ.pdf")
+        docs_path = Path("/Users/yanglinchen/Documents/中电福富/MetaGPT/WorldNews/Documents/knowledge.json")
         self.engine = SimpleEngine.from_docs(
             input_files=[docs_path],
             # 可选: 添加重排序提高相关性

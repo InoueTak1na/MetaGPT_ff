@@ -1,1 +1,2 @@
 Bob likes traveling.
+Alice doesn't like traveling.
