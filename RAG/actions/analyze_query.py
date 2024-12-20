@@ -4,11 +4,11 @@ from metagpt.schema import Message
 from metagpt.rag.engines import SimpleEngine
 from metagpt.const import EXAMPLE_DATA_PATH
 from metagpt.logs import logger
+from typing import List
 
-class AnalyzeQuery(Action):
-    """分析用户查询并决定调用哪个角色处理"""
-    
-    name: str = "AnalyzeQuery"
+class SplitQuery(Action):
+    """分析并按需拆分用户查询"""
+    name: str = "SplitQuery"
     
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -39,34 +39,47 @@ class AnalyzeQuery(Action):
             logger.error(f"获取知识库内容时发生错误: {str(e)}")
             return None
     
-    async def run(self, query: str) -> Optional[str]:
-        """分析用户查询并返回合适的角色名称"""
+    async def run(self, query: str) -> list[dict]:
+        """分析用户查询,返回查询列表(可能是单个查询或多个子查询)"""
         try:
             # 获取相关知识
             context = await self._get_context(query)
-            if not context:
-                return None
-                
-            # 根据上下文决定要调用的角色
-            prompt = f"""
-            基于以下信息,决定调用哪个角色处理用户需求:
             
-            用户需求: {query}
-            相关知识: {context}
+            prompt = f"""
+            分析以下用户查询,判断是否需要拆分成多个子查询。如果需要拆分,则拆分成多个独立的子查询。
+            
+            用户查询: {query}
+            相关知识: {context if context else "无相关知识"}
             
             可用角色:
-            1. GIS-PUBLIC-BBU - 基站地图
-            2. GIS-PUBLIC-SITE - 站址地图
-            3. GIS-PUBLIC-CELL - 小区地图
-            4. GIS-PUBLIC-MAP - 地图
+            1. GIS-PUBLIC-BBU
+            2. GIS-PUBLIC-SITE
+            3. GIS-PUBLIC-CELL
+            4. GIS-PUBLIC-MAP
             
-            请返回最合适的一个角色名称,仅返回角色名,不要其他内容
+            请返回Python列表格式,每个元素是一个字典,包含query和role两个键。
+            如果查询不需要拆分,则返回单个元素的列表。
+            如果需要拆分,则返回多个元素的列表。
+            仅返回查询列表,不要其他内容。
+            
+            示例输出格式:
+            # 不需要拆分的情况:
+            [
+                {{"query": "原始查询内容", "role": "GIS-PUBLIC-BBU"}}
+            ]
+            
+            # 需要拆分的情况:
+            [
+                {{"query": "子查询1", "role": "GIS-PUBLIC-BBU"}},
+                {{"query": "子查询2", "role": "GIS-PUBLIC-CELL"}},
+            ]
             """
             
-            role_name = await self._aask(prompt)
-            logger.info(f"决定调用角色: {role_name}")
-            return role_name
+            result = await self._aask(prompt)
+            queries = eval(result)
+            logger.info(f"查询分析结果: {queries}")
+            return queries
             
         except Exception as e:
             logger.error(f"分析查询时发生错误: {str(e)}")
-            return None 
+            return []

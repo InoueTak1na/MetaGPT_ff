@@ -8,7 +8,7 @@ class MapAction(Action):
     async def run(self, query: str) -> str:
         try:
             # 这里添加实际的地图查询逻辑
-            logger.info("成功调用MAP")
+            logger.info(f"成功调用MAP, 查询内容: {query}")
             return f"地图查询结果: {query}"
         except Exception as e:
             logger.error(f"地图查询失败: {str(e)}")

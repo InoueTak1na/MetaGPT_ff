@@ -21,8 +21,8 @@ def main(
         team.hire(
             [Center(), BBURole(), CellRole(), MapRole(), SiteRole()]
         )
-        team.run_project(idea=query)
-        await team.run(n_round=5)
+        team.run_project(idea=query, send_to="Center")
+        await team.run(n_round=5, send_to="Center")
 
     # 调用 asyncio.run() 运行异步逻辑
     asyncio.run(async_main())
