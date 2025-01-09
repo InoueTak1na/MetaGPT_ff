@@ -85,7 +85,7 @@ class SimpleEngine(RetrieverQueryEngine):
         input_dir: str = None,
         input_files: list[str] = None,
         transformations: Optional[list[TransformComponent]] = None,
-        embed_model: BaseEmbedding = None,
+        embed_model: BaseEmbedding = None,                                                                                                                                                                                                                                                                                                                                                                                  
         llm: LLM = None,
         retriever_configs: list[BaseRetrieverConfig] = None,
         ranker_configs: list[BaseRankerConfig] = None,

@@ -11,11 +11,12 @@ llm:
   api_type: "dashscope"
   base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
   model: "qwen-max"
-  api_key: "sk-*"
+  api_key: "sk-3eb46edc645e4a789c5754a472bc5760"
 
 embedding:
   api_type: "ollama"
-  base_url: "http://localhost:11434"
-  model: "shaw/dmeta-embedding-zh"
+  base_url: "http://192.168.35.235:11434"
+  model: "qwen2:1.5b"
   dimensions: 1536
+
 # proxy: "http://127.0.0.1:7890"
